@@ -1,5 +1,5 @@
-[GNU Pies](http://www.gnu.org.ua/software/pies/)
-[Docker Pulls](https://hub.docker.com/r/graygnuorg/pies)
+[GNU Pies](http://www.gnu.org.ua/software/pies/) |
+ [Docker Pulls](https://hub.docker.com/r/graygnuorg/pies)
 # GNU Pies docker image
 
 This is the source repository for [GNU Pies](https://hub.docker.com/r/graygnuorg/pies) docker image.
@@ -20,7 +20,12 @@ statement per configuration file.
 
 ### Environment variables
 
-The following environment variables control the logging output:
+* `PIES_PREPROCESSOR`
+
+External command that pies will use to preprocess its configuration files.
+This image ships two preprocessors: [GNU m4](https://www.gnu.org/software/m4)
+and [xenv](https://puszcza.gnu.org.ua/projects/xenv).  By default `m4`
+is used.  
 
 * `PIES_SYSLOG_SERVER`
 

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/sbin/pies --foreground --stderr ${PIES_PREPROCESSOR:+--preprocessor=$PIES_PREPROCESSOR} "$@"

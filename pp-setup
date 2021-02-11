@@ -132,6 +132,6 @@ m4_define(`CF_STDO',m4_dnl
 `stdout syslog info;
 stderr syslog err',
 `stdout file /proc/1/fd/1;
-stderr file /proc/1/fd/2')')
+stderr file /proc/1/fd/1')')
 
 m4_divert(0)m4_dnl
