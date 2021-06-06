@@ -1,2 +1,3 @@
 #!/bin/sh
-exec /usr/sbin/pies --foreground --stderr ${PIES_PREPROCESSOR:+--preprocessor=$PIES_PREPROCESSOR} "$@"
+PATH=/pies/bin:/pies/sbin:$PATH
+exec /pies/sbin/pies --foreground --stderr ${PIES_PREPROCESSOR:+--preprocessor=$PIES_PREPROCESSOR} "$@"
