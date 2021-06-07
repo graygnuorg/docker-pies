@@ -1,5 +1,6 @@
 [GNU Pies](http://www.gnu.org.ua/software/pies/) |
- [Docker Pulls](https://hub.docker.com/r/graygnuorg/pies)
+ [Docker Pulls](https://hub.docker.com/r/graygnuorg/pies) |
+ [xenv](https://www.gnu.org.ua/software/xenv/)
 # GNU Pies docker image
 
 This is the source repository for [GNU Pies](https://hub.docker.com/r/graygnuorg/pies) docker image.
@@ -12,20 +13,32 @@ processes.
 
 ## Image structure
 
-The main configuration file `/etc/pies.conf` looks for files with
-suffix `.conf` in the directory `/etc/pies.d` and includes them.
-The derived images are supposed to put their configuration files
-there.  The recommended approach is to keep a single `component`
-statement per configuration file.
+GNU pies is installed into the `/pies' directory.  The main configuration
+file is `/pies/conf/pies.conf'.  It looks for files with suffix `.conf` in
+the directory `/pies/conf.d` and includes them.  The derived images are
+supposed to put their configuration files there.  The recommended approach
+is to keep a single `component` statement per configuration file.
+
+### Preprocessor
+
+The default preprocessor is [xenv](https://www.gnu.org.ua/software/xenv/).
+It was designed to facilitate the use of environment variables in
+configuration files.  Variables can be referred to using the familiar
+shell syntax: `$VAR`.  Special forms are provided that allow you to
+test for a variable that is unset or null and provide expansions depending
+on that.  See the [online documentation](http://man.gnu.org.ua/manpage/?1+xenv)
+for a detailed discussion.
+
+The preprocessor binary is installed in `/pies/bin`.
 
 ### Environment variables
+
+The following environment variables control the behavior of `pies`.
 
 * `PIES_PREPROCESSOR`
 
 External command that pies will use to preprocess its configuration files.
-This image ships two preprocessors: [GNU m4](https://www.gnu.org/software/m4)
-and [xenv](https://puszcza.gnu.org.ua/projects/xenv).  By default `m4`
-is used.  
+The default is `xenv`.  Apart from it, this image contains [GNU m4](https://www.gnu.org/software/m4).  
 
 * `PIES_SYSLOG_SERVER`
 
@@ -41,38 +54,6 @@ Name of the syslog facility to use for messages.  Default is `daemon`.
 
 Syslog tag to use for messages from the `pies` master process.  Default is
 `pies`.
-
-### Preprocessor macros
-
-The following preprocessor macros are available for use in 
-configuration files:
-
-* `CF_WITH_ENVAR(VAR,TEXT)`
-
-Temporarily redefine `VAR` to the value of the environment variable `VAR` and
-expand `TEXT`.
-
-* `CF_IF_ENVAR(VAR,IF-SET,IF-UNSET)`
-
-If the environment variable `VAR` is defined and has a non-empty value,
-expand `IF-SET`, otherwise expand `IF-UNSET`.  Expand `VAR` in `IF-SET`
-to the actual value of the environment variable.
-
-* `CF_STDO`
-
-Use this macro in `component` statements to capture standard output and
-error and redirect them to the container log or syslog:
-
-```
-component X {
-    command Y;
-    CF_STDO;
-}
-```
-
-If the `PIES_SYSLOG_SERVER` environment variable is set, standard streams
-are redirected to syslog.  Otherwise, they are redirected to the container
-stdout/stderr.
 
 ### Control port
 
@@ -97,10 +78,10 @@ The following, a bit contrived, example creates an image for running
 ### `Dockerfile`
 
 ```Dockerfile
-FROM graygnuorg/pies:1.5
+FROM graygnuorg/pies:latest
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends apache2
-COPY apache2.conf /etc/pies.d
+COPY apache2.conf /pies/conf.d
 EXPOSE 80 8443
 ```
 
@@ -109,8 +90,29 @@ EXPOSE 80 8443
 ```
 component apache2 {
 	command "/usr/sbin/apache2ctl -DFOREGROUND";
-	CF_STDO;
+$$ifdef PIES_SYSLOG_SERVER
+        stdout syslog info;
+        stderr syslog err;
+$$else
+        stdout file /proc/1/fd/1;
+        stderr file /proc/1/fd/1;
+$$endif
 }
+```
+
+## Multi-stage builds
+
+This image is suitable for use in multi-stage builds.  The following
+example Dockerfile builds an image for Varnish Cache with GNU pies
+as supervisor:
+
+```Dockerfile
+FROM graygnuorg/pies:latest as pies
+FROM varnish:stable
+COPY --from=pies /pies /pies
+COPY varnish.conf /pies/conf.d
+ENTRYPOINT ["/pies/conf/rc"]
+EXPOSE 8073 80 8443
 ```
 
 ## License
