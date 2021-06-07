@@ -10,21 +10,23 @@ WORKDIR /usr/src
 RUN git clone http://git.gnu.org.ua/pies.git
 WORKDIR /usr/src/pies
 RUN ./bootstrap
-RUN ./configure --prefix=${PREFIX} && \
+RUN ./configure --prefix=${PREFIX}\
+          --sysconfdir=${PREFIX}/conf\
+	  DEFAULT_PREPROCESSOR="/pies/bin/xenv -s" &&\
     make INFO_DEPS= && \
-    make INFO_DEPS= install
+    make INFO_DEPS= incdir=${PREFIX}/conf install
 WORKDIR /usr/src
 RUN git clone http://git.gnu.org.ua/xenv.git
 WORKDIR /usr/src/xenv
 RUN make PREFIX=${PREFIX} install
 WORKDIR ${PREFIX}
-RUN mkdir -p ${PREFIX}/etc/pies.d ${PREFIX}/share/pies/include
-COPY pies.conf ${PREFIX}/etc
-RUN find ${PREFIX}/share/pies -name pp-setup -delete
-COPY pp-setup ${PREFIX}/share/pies/include
-COPY rc ${PREFIX}/etc
-ENTRYPOINT ["/pies/etc/rc"]
+RUN mkdir ${PREFIX}/conf.d
+RUN find ${PREFIX}/conf -name pp-setup -delete
+COPY pies.conf ${PREFIX}/conf
+COPY rc ${PREFIX}/conf
+ENTRYPOINT ["/pies/conf/rc"]
 EXPOSE 8073
+RUN rm -rf /usr/src/*
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${BUILD_DEPS} && \
  rm -rf /var/lib/apt/lists/*
 
