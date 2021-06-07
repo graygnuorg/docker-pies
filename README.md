@@ -13,8 +13,8 @@ processes.
 
 ## Image structure
 
-GNU pies is installed into the `/pies' directory.  The main configuration
-file is `/pies/conf/pies.conf'.  It looks for files with suffix `.conf` in
+GNU pies is installed into the `/pies` directory.  The main configuration
+file is `/pies/conf/pies.conf`.  It looks for files with suffix `.conf` in
 the directory `/pies/conf.d` and includes them.  The derived images are
 supposed to put their configuration files there.  The recommended approach
 is to keep a single `component` statement per configuration file.
