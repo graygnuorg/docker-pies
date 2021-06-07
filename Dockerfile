@@ -12,6 +12,7 @@ WORKDIR /usr/src/pies
 RUN ./bootstrap
 RUN ./configure --prefix=${PREFIX}\
           --sysconfdir=${PREFIX}/conf\
+	  --disable-sysvinit\
 	  DEFAULT_PREPROCESSOR="/pies/bin/xenv -s" &&\
     make INFO_DEPS= && \
     make INFO_DEPS= incdir=${PREFIX}/conf install
@@ -24,6 +25,7 @@ RUN mkdir ${PREFIX}/conf.d
 RUN find ${PREFIX}/conf -name pp-setup -delete
 COPY pies.conf ${PREFIX}/conf
 COPY rc ${PREFIX}/conf
+ENV PATH="/pies/sbin:/pies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENTRYPOINT ["/pies/conf/rc"]
 EXPOSE 8073
 RUN rm -rf /usr/src/*
