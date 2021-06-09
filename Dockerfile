@@ -13,16 +13,17 @@ RUN ./bootstrap
 RUN ./configure --prefix=${PREFIX}\
           --sysconfdir=${PREFIX}/conf\
 	  --disable-sysvinit\
+	  --without-pp-setup\
+	  DEFAULT_INCLUDE_PATH=${PREFIX}/conf\
 	  DEFAULT_PREPROCESSOR="/pies/bin/xenv -s" &&\
     make INFO_DEPS= && \
-    make INFO_DEPS= incdir=${PREFIX}/conf install
+    make INFO_DEPS= install
 WORKDIR /usr/src
 RUN git clone http://git.gnu.org.ua/xenv.git
 WORKDIR /usr/src/xenv
 RUN make PREFIX=${PREFIX} install
 WORKDIR ${PREFIX}
-RUN mkdir ${PREFIX}/conf.d
-RUN find ${PREFIX}/conf -name pp-setup -delete
+RUN mkdir ${PREFIX}/conf ${PREFIX}/conf.d
 COPY pies.conf ${PREFIX}/conf
 COPY rc ${PREFIX}/conf
 ENV PATH="/pies/sbin:/pies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

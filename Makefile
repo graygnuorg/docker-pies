@@ -1,4 +1,4 @@
-VERSION=1.5.93
+VERSION=1.5.94
 OSVERSION=10
 
 all: .pies-$(VERSION).ts	
