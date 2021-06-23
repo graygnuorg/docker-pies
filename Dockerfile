@@ -2,6 +2,8 @@ ARG OSVERSION=10
 FROM debian:${OSVERSION}
 ENV DEBIAN_FRONTEND=noninteractive
 ARG PREFIX=/pies
+ARG PIES_TAG=
+ARG XENV_TAG=
 ARG BUILD_DEPS="build-essential git rsync wget autopoint automake autoconf bison flex"
 RUN apt-get -qq update && \
     apt-get -qq install \
@@ -9,6 +11,7 @@ RUN apt-get -qq update && \
 WORKDIR /usr/src
 RUN git clone http://git.gnu.org.ua/pies.git
 WORKDIR /usr/src/pies
+RUN if [ -n "${PIES_TAG}" ]; then git checkout ${PIES_TAG}; fi
 RUN ./bootstrap
 RUN ./configure --prefix=${PREFIX}\
           --sysconfdir=${PREFIX}/conf\
@@ -21,6 +24,7 @@ RUN ./configure --prefix=${PREFIX}\
 WORKDIR /usr/src
 RUN git clone http://git.gnu.org.ua/xenv.git
 WORKDIR /usr/src/xenv
+RUN if [ -n "${XENV_TAG}" ]; then git checkout ${XENV_TAG}; fi
 RUN make PREFIX=${PREFIX} install
 WORKDIR ${PREFIX}
 RUN mkdir ${PREFIX}/conf ${PREFIX}/conf.d
