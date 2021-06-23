@@ -25,6 +25,7 @@ RUN git clone http://git.gnu.org.ua/xenv.git
 WORKDIR /usr/src/xenv
 RUN if [ -n "${XENV_TAG}" ]; then git checkout ${XENV_TAG}; fi
 RUN make PREFIX=${PREFIX} install-bin
+WORKDIR ${PREFIX}
 RUN mkdir ${PREFIX}/conf ${PREFIX}/conf.d
 COPY pies.conf ${PREFIX}/conf
 COPY rc ${PREFIX}/conf
