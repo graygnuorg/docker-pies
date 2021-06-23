@@ -4,9 +4,9 @@ export USER IMAGE PLATFORM BUILD PIES_TAG XENV_TAG NOCACHE OSVERSION
 
 USER=graygnuorg
 IMAGE=pies
-PLATFORM=debian
+PLATFORM=
 BUILD=
-OSVERSION=
+OSVERSION=latest
 PLATFORM=
 
 while [ $# -gt 0 ]
@@ -69,7 +69,11 @@ if [ ! -d $PLATFORM ]; then
     exit 1
 fi
 
-if [ ! -x $PLATFORM/build.sh ]; then
+if [ -x $PLATFORM/build.sh ]; then
+    BUILDER=$PLATFORM/build.sh
+elif [ -f $PLATFORM/Dockerfile ]; then
+    BUILDER=./build.sh
+else    
     echo >&2 "$0: don't know how to build $IMAGE for $PLATFORM"
     exit 1
 fi
@@ -77,5 +81,5 @@ fi
 IMAGENAME=${USER}/${IMAGE}:${PLATFORM}-${BUILD}
 export IMAGENAME
 
-exec $PLATFORM/build.sh
+exec $BUILDER
 

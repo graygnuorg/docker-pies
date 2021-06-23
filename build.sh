@@ -1,6 +1,6 @@
 #!/bin/sh
 : ${IMAGENAME:?}
-: ${PLATFORM:=$(basename $(pwd))}
+: ${PLATFORM:?}
 : ${BUILD:?}
 set -x    
 docker build -t $IMAGENAME ${NOCACHE:+--no-cache} \
