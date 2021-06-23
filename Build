@@ -1,0 +1,81 @@
+#!/bin/sh
+
+export USER IMAGE PLATFORM BUILD PIES_TAG XENV_TAG NOCACHE OSVERSION
+
+USER=graygnuorg
+IMAGE=pies
+PLATFORM=debian
+BUILD=
+OSVERSION=
+PLATFORM=
+
+while [ $# -gt 0 ]
+do
+    case $1 in
+	--no-cache)
+	    NOCACHE=1
+	    shift;;
+	--debug|-x)
+	    set -x
+	    shift;;
+
+	--build=*)
+	    BUILD=${1##--build=}
+	    shift;;
+	--build|-b)
+	    shift
+	    BUILD=${1:?--build requires argument}
+	    shift;;
+	-b*)
+	    BUILD=${1##-b}
+	    shift;;
+		
+	--version=*)
+	    OSVERSION=${1##--version}
+	    shift;;
+	--version|-v)
+	    shift
+	    OSVERSION=${1:?--version requires argument}
+	    shift;;
+	-v*)
+	    OSVERSION=${1##-v}
+	    shift;;
+
+	*=*)
+	    set -e
+	    eval $1
+	    set +e
+	    shift;;
+	
+	-*) echo >&2 "$0: unknown option: $1"
+	    exit 1;;
+        --) shift
+	    break;;
+	*)  break;;
+    esac
+done
+
+case $# in
+    1) PLATFORM=$1
+       shift;;
+    0) echo >&2 "$0: required argument missing"
+       exit 1;;
+    *) echo >&2 "$0: too many arguments"
+       exit 1;;
+esac    
+	
+if [ ! -d $PLATFORM ]; then
+    echo >&2 "$0: unknown platform $PLATFORM"
+    exit 1
+fi
+
+if [ ! -x $PLATFORM/build.sh ]; then
+    echo >&2 "$0: don't know how to build $IMAGE for $PLATFORM"
+    exit 1
+fi
+
+IMAGENAME=${USER}/${IMAGE}:${PLATFORM}-${BUILD}
+export IMAGENAME
+
+exec $PLATFORM/build.sh
+
