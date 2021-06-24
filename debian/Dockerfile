@@ -1,14 +1,14 @@
-ARG OSVERSION=10
+ARG OSVERSION=latest
 FROM debian:${OSVERSION}
 ENV DEBIAN_FRONTEND=noninteractive
-ARG PREFIX=/pies
-ARG PIES_TAG=
-ARG XENV_TAG=
 ARG BUILD_DEPS="build-essential git rsync wget autopoint automake autoconf bison flex"
 RUN apt-get -qq update && \
     apt-get -qq install \
              m4 ${BUILD_DEPS}
 WORKDIR /usr/src
+ARG PREFIX=/pies
+ARG PIES_TAG=
+ARG XENV_TAG=
 RUN git clone http://git.gnu.org.ua/pies.git
 WORKDIR /usr/src/pies
 RUN if [ -n "${PIES_TAG}" ]; then git checkout ${PIES_TAG}; fi

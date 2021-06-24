@@ -1,0 +1,22 @@
+# This file provides definitions for building various versions of
+# GNU pies container.
+#
+# Each definition begins with `build=NAME' and ends with a formfeed
+# character.  Any number of variable assignments can appear between
+# them.  A variable assignment starting with 'os ' is special.  It
+# defines a version of the OS (distro, actually) to use for that
+# particular build.  A missing 'os' entry stands for 'latest'.
+#
+# Empty lines and comments are ignored.
+# Whitespace characters are allowed at either side of the = operator.
+#
+build=latest
+PIES_TAG=HEAD
+XENV_TAG=HEAD
+
+build=2.0
+PIES_TAG=32b66872e6
+XENV_TAG=v2.0
+os debian=10
+os alpine=3.13.1
+

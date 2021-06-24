@@ -1,11 +1,11 @@
 ARG OSVERSION=latest
 FROM alpine:${OSVERSION}
-ARG PREFIX=/pies
-ARG PIES_TAG=
-ARG XENV_TAG=
 ARG BUILD_DEPS="alpine-sdk git autoconf automake gettext gettext-dev rsync coreutils bison flex"
 RUN apk add ${BUILD_DEPS} m4
 WORKDIR /usr/src
+ARG PREFIX=/pies
+ARG PIES_TAG=
+ARG XENV_TAG=
 RUN git clone http://git.gnu.org.ua/pies.git
 WORKDIR /usr/src/pies
 RUN if [ -n "${PIES_TAG}" ]; then git checkout ${PIES_TAG}; fi

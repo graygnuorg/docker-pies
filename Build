@@ -4,8 +4,7 @@ export USER IMAGE PLATFORM BUILD PIES_TAG XENV_TAG NOCACHE OSVERSION
 
 USER=graygnuorg
 IMAGE=pies
-PLATFORM=
-BUILD=
+BUILD=latest
 OSVERSION=latest
 PLATFORM=
 
@@ -30,23 +29,6 @@ do
 	    BUILD=${1##-b}
 	    shift;;
 		
-	--version=*)
-	    OSVERSION=${1##--version}
-	    shift;;
-	--version|-v)
-	    shift
-	    OSVERSION=${1:?--version requires argument}
-	    shift;;
-	-v*)
-	    OSVERSION=${1##-v}
-	    shift;;
-
-	*=*)
-	    set -e
-	    eval $1
-	    set +e
-	    shift;;
-	
 	-*) echo >&2 "$0: unknown option: $1"
 	    exit 1;;
         --) shift
@@ -80,6 +62,19 @@ fi
 
 IMAGENAME=${USER}/${IMAGE}:${PLATFORM}-${BUILD}
 export IMAGENAME
+
+awk '
+/^[[:blank:]]*#/ { next }
+/^[[:blank:]]*$/ { next }
+state == 0 && /^build='$BUILD'$/ { state=1 }
+state == 0 { next }
+state == 1 && /=/ { sub(/[[:blank:]]*=[[:blank:]]*/, "="); }
+state == 1 && /^os[[:blank:]]+'$PLATFORM'=/ { sub(/^os[[:blank:]].*=/, "OSVERSION="); print; next }
+state == 1 && /^[A-Za-z_][A-Za-z_0-9]*=/ { print }
+state == 1 && /\f/ { exit }
+' buildtab > conf.$$
+. ./conf.$$
+rm conf.$$
 
 exec $BUILDER
 
