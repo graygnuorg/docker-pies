@@ -60,7 +60,9 @@ else
     exit 1
 fi
 
-IMAGENAME=${USER}/${IMAGE}:${PLATFORM}-${BUILD}
+VERSION=${PLATFORM}-${BUILD}
+export VERSION
+IMAGENAME=${USER}/${IMAGE}:${VERSION}
 export IMAGENAME
 
 awk '
@@ -73,8 +75,29 @@ state == 1 && /^os[[:blank:]]+'$PLATFORM'=/ { sub(/^os[[:blank:]].*=/, "OSVERSIO
 state == 1 && /^[A-Za-z_][A-Za-z_0-9]*=/ { print }
 state == 1 && /\f/ { exit }
 ' buildtab > conf.$$
+set -a
 . ./conf.$$
+set +a
 rm conf.$$
+
+extract_version() {
+    curl -s "$1/plain/NEWS?id=$2" | \
+	sed -n -r \
+	    -e '/^Version[[:blank:]]+/{' \
+	    -e 's///' \
+	    -e 's/,.*$//' \
+	    -e 'p;q}'
+}
+
+if [ -z "$PIES_VERSION" ]; then
+    PIES_VERSION=$(extract_version https://git.gnu.org.ua/pies.git $PIES_TAG)
+    export PIES_VERSION
+fi
+
+if [ -z "$XENV_VERSION" ]; then
+    XENV_VERSION=$(extract_version https://git.gnu.org.ua/xenv.git $XENV_TAG)
+    export XENV_VERSION
+fi
 
 exec $BUILDER
 
