@@ -26,7 +26,7 @@ WORKDIR /usr/src
 RUN git clone http://git.gnu.org.ua/xenv.git
 WORKDIR /usr/src/xenv
 RUN if [ -n "${XENV_TAG}" ]; then git checkout ${XENV_TAG}; fi
-RUN make PREFIX=${PREFIX} install-bin
+RUN make PREFIX=${PREFIX} LEXFLAGS= install-bin
 WORKDIR ${PREFIX}
 RUN mkdir ${PREFIX}/conf ${PREFIX}/conf.d
 COPY pies.conf ${PREFIX}/conf
@@ -50,5 +50,3 @@ LABEL org.opencontainers.vendor="Sergey Poznyakoff"
 LABEL org.opencontainers.image.licenses="GPLv3+"
 LABEL org.opencontainers.image.description="pies ${PIES_VERSION}, xenv ${XENV_VERSION}"
 LABEL org.opencontainers.image.created="${CREATEDTIME}"
-    
-
