@@ -85,7 +85,7 @@ extract_version() {
 	sed -n -r \
 	    -e '/^Version[[:blank:]]+/{' \
 	    -e 's///' \
-	    -e 's/,.*$//' \
+	    -e 's/[,(].*$//' \
 	    -e 'p;q}'
 }
 
