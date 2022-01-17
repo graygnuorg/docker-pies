@@ -40,13 +40,13 @@ RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 ARG CREATEDTIME
 ARG PIES_VERSION
 ARG XENV_VERSION
-LABEL org.opencontainers.image.title="GNU Pies docker image"
-LABEL org.opencontainers.image.documentation="Base for creating images with components managed by GNU Pies"
-LABEL org.opencontainers.version="${VERSION}"
-LABEL org.opencontainers.image.authors="Sergey Poznyakoff <gray@gnu.org>"
-LABEL org.opencontainers.image.url="https://github.com/graygnuorg/docker-pies"
-LABEL org.opencontainers.image.source="https://github.com/graygnuorg/docker-pies"
-LABEL org.opencontainers.vendor="Sergey Poznyakoff"
-LABEL org.opencontainers.image.licenses="GPLv3+"
-LABEL org.opencontainers.image.description="pies ${PIES_VERSION}, xenv ${XENV_VERSION}"
-LABEL org.opencontainers.image.created="${CREATEDTIME}"
+LABEL org.opencontainers.image.title="GNU Pies docker image" \
+      org.opencontainers.image.documentation="Base for creating images with components managed by GNU Pies" \
+      org.opencontainers.version="${VERSION}" \
+      org.opencontainers.image.authors="Sergey Poznyakoff <gray@gnu.org>" \
+      org.opencontainers.image.url="https://github.com/graygnuorg/docker-pies" \
+      org.opencontainers.image.source="https://github.com/graygnuorg/docker-pies" \
+      org.opencontainers.vendor="Sergey Poznyakoff" \
+      org.opencontainers.image.licenses="GPLv3+" \
+      org.opencontainers.image.description="pies ${PIES_VERSION}, xenv ${XENV_VERSION}" \
+      org.opencontainers.image.created="${CREATEDTIME}"

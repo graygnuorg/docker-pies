@@ -14,6 +14,18 @@ build=latest
 PIES_TAG=HEAD
 XENV_TAG=HEAD
 
+build=2.4
+PIES_TAG=da5d37b71e33ed9624feaea958b93208c8b7e06e
+XENV_TAG=v2.2
+os debian=10
+os alpine=3.13.1
+
+build=2.3
+PIES_TAG=34a36ed647
+XENV_TAG=v2.2
+os debian=10
+os alpine=3.13.1
+
 build=2.2
 PIES_TAG=release-1.6
 XENV_TAG=v2.1
