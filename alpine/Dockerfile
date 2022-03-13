@@ -11,7 +11,7 @@ WORKDIR /usr/src/pies
 RUN if [ -n "${PIES_TAG}" ]; then git checkout ${PIES_TAG}; fi
 COPY pies_diag_setup.diff .
 RUN patch -p1 < pies_diag_setup.diff
-RUN ./bootstrap
+RUN ./bootstrap --skip-po
 RUN ./configure --prefix=${PREFIX}\
           --sysconfdir=${PREFIX}/conf\
 	  --disable-sysvinit\
