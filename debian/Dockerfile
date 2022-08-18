@@ -29,8 +29,14 @@ WORKDIR /usr/src
 RUN git clone http://git.gnu.org.ua/xenv.git
 WORKDIR /usr/src/xenv
 RUN if [ -n "${XENV_TAG}" ]; then git checkout ${XENV_TAG}; fi
-RUN make PREFIX=${PREFIX} LEXFLAGS= install-bin DESTDIR=/install
-
+RUN if [ -f configure.ac ]; then \
+      autoreconf -fis && \
+      ./configure --prefix=${PREFIX} && \
+      make INFO_DEPS= && \
+      make INFO_DEPS= install DESTDIR=/install; \
+    else \
+      make PREFIX=${PREFIX} LEXFLAGS= install-bin DESTDIR=/install;\
+    fi
 ARG OSVERSION=latest
 FROM debian:${OSVERSION}
 ARG VERSION=
