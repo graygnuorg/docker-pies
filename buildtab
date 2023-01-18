@@ -15,6 +15,18 @@ PIES_TAG=HEAD
 XENV_TAG=HEAD
 os debian=10-slim
 
+build=2.15
+PIES_TAG=1ef8e747c7e0a5c25050078de2141a5c33288676
+XENV_TAG=b11cae1b0720f949ac45cb5feea1e131588e74fa
+os debian=10-slim
+os alpine=3.13.1
+
+build=2.14
+PIES_TAG=1ef8e747c7e0a5c25050078de2141a5c33288676
+XENV_TAG=v4.0
+os debian=10-slim
+os alpine=3.13.1
+
 build=2.13
 PIES_TAG=release-1.8
 XENV_TAG=v4.0
