@@ -60,11 +60,6 @@ else
     exit 1
 fi
 
-VERSION=${PLATFORM}-${BUILD}
-export VERSION
-IMAGENAME=${USER}/${IMAGE}:${VERSION}
-export IMAGENAME
-
 awk '
 /^[[:blank:]]*#/ { next }
 /^[[:blank:]]*$/ { next }
@@ -79,6 +74,12 @@ set -a
 . ./conf.$$
 set +a
 rm conf.$$
+
+VERSION=${BUILD}-${PLATFORM}
+export VERSION
+IMAGENAME=${USER}/${IMAGE}:${VERSION}
+export IMAGENAME
+
 
 extract_version() {
     curl -s "$1/plain/NEWS?id=$2" | \
@@ -97,6 +98,11 @@ fi
 if [ -z "$XENV_VERSION" ]; then
     XENV_VERSION=$(extract_version https://git.gnu.org.ua/xenv.git $XENV_TAG)
     export XENV_VERSION
+fi
+
+if [ -z "$SYSLOGRELAY_VERSION" ]; then
+    SYSLOGRELAY_VERSION=$(extract_version https://git.gnu.org.ua/xenv.git $SYSLOGRELAY_TAG)
+    export SYSLOGRELAY_VERSION
 fi
 
 exec $BUILDER

@@ -3,8 +3,9 @@ FROM debian:${OSVERSION} AS builder
 ARG VERSION=
 ARG PIES_TAG=
 ARG XENV_TAG=
+ARG SYSLOGRELAY_TAG=
 ENV DEBIAN_FRONTEND=noninteractive
-ARG BUILD_DEPS="build-essential git rsync wget autopoint automake autoconf bison flex"
+ARG BUILD_DEPS="build-essential git rsync wget autopoint automake autoconf pkgconf bison flex"
 RUN apt-get -qq update && \
     apt-get -qq install \
              m4 ${BUILD_DEPS}
@@ -37,6 +38,16 @@ RUN if [ -f configure.ac ]; then \
     else \
       make PREFIX=${PREFIX} LEXFLAGS= install-bin DESTDIR=/install;\
     fi
+
+WORKDIR /usr/src
+RUN git clone http://git.gnu.org.ua/syslogrelay.git
+WORKDIR /usr/src/syslogrelay
+RUN if [ -n "${SYSLOGRELAY_TAG}" ]; then git checkout ${SYSLOGRELAY_TAG}; fi
+RUN autoreconf -fis && \
+    ./configure --prefix=${PREFIX} && \
+    make INFO_DEPS= && \
+    make INFO_DEPS= install DESTDIR=/install
+
 ARG OSVERSION=latest
 FROM debian:${OSVERSION}
 ARG VERSION=
@@ -52,9 +63,11 @@ COPY rc ${PREFIX}/conf
 ENV PATH="/pies/sbin:/pies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENTRYPOINT ["/pies/conf/rc"]
 EXPOSE 8073
+ARG OSVERSION
 ARG CREATEDTIME
 ARG PIES_VERSION
 ARG XENV_VERSION
+ARG SYSLOGRELAY_VERSION
 LABEL org.opencontainers.image.title="GNU Pies docker image" \
       org.opencontainers.image.documentation="Base for creating images with components managed by GNU Pies" \
       org.opencontainers.version="${VERSION}" \
@@ -63,5 +76,5 @@ LABEL org.opencontainers.image.title="GNU Pies docker image" \
       org.opencontainers.image.source="https://github.com/graygnuorg/docker-pies" \
       org.opencontainers.vendor="Sergey Poznyakoff" \
       org.opencontainers.image.licenses="GPLv3+" \
-      org.opencontainers.image.description="pies ${PIES_VERSION}, xenv ${XENV_VERSION}" \
+      org.opencontainers.image.description="Debian ${OSVERSION}, pies ${PIES_VERSION}, xenv ${XENV_VERSION}, syslogrelay ${SYSLOGRELAY_VERSION}" \
       org.opencontainers.image.created="${CREATEDTIME}"

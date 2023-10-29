@@ -11,6 +11,8 @@ docker build -t $IMAGENAME ${NOCACHE:+--no-cache} \
 	  --build-arg PIES_VERSION=${PIES_VERSION:-$PIES_TAG} \
           --build-arg XENV_TAG=$XENV_TAG \
 	  --build-arg XENV_VERSION=${XENV_VERSION:-$XENV_TAG} \
+          --build-arg SYSLOGRELAY_TAG=$SYSLOGRELAY_TAG \
+	  --build-arg SYSLOGRELAY_VERSION=${SYSLOGRELAY_VERSION:-$SYSLOGRELAY_TAG} \
 	  --build-arg CREATEDTIME=$(date --utc +'%Y-%m-%dT%H:%M:%SZ') \
 	  -f ${PLATFORM}/Dockerfile \
           tree

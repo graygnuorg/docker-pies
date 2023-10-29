@@ -35,6 +35,16 @@ RUN if [ -f configure.ac ]; then \
       make PREFIX=${PREFIX} LEXFLAGS= install-bin DESTDIR=/install;\
     fi
 
+ARG SYSLOGRELAY_TAG=
+WORKDIR /usr/src
+RUN git clone http://git.gnu.org.ua/syslogrelay.git
+WORKDIR /usr/src/syslogrelay
+RUN if [ -n "${SYSLOGRELAY_TAG}" ]; then git checkout ${SYSLOGRELAY_TAG}; fi
+RUN autoreconf -fis && \
+    ./configure --prefix=${PREFIX} && \
+    make INFO_DEPS= && \
+    make INFO_DEPS= install DESTDIR=/install
+
 ARG OSVERSION=latest
 FROM alpine:${OSVERSION}
 ARG VERSION=
@@ -51,9 +61,11 @@ ENV PATH="/pies/sbin:/pies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 ENTRYPOINT ["/pies/conf/rc"]
 EXPOSE 8073
 ARG VERSION
+ARG OSVERSION
 ARG CREATEDTIME
 ARG PIES_VERSION
 ARG XENV_VERSION
+ARG SYSLOGRELAY_VERSION
 LABEL org.opencontainers.image.title="GNU Pies docker image" \
       org.opencontainers.image.documentation="Base for creating images with components managed by GNU Pies" \
       org.opencontainers.version="${VERSION}" \
@@ -62,7 +74,7 @@ LABEL org.opencontainers.image.title="GNU Pies docker image" \
       org.opencontainers.image.source="https://github.com/graygnuorg/docker-pies" \
       org.opencontainers.vendor="Sergey Poznyakoff" \
       org.opencontainers.image.licenses="GPLv3+" \
-      org.opencontainers.image.description="pies ${PIES_VERSION}, xenv ${XENV_VERSION}" \
+      org.opencontainers.image.description="Alpine ${OSVERSION}, pies ${PIES_VERSION}, xenv ${XENV_VERSION}, syslogrelay ${SYSLOGRELAY_VERSION}" \
       org.opencontainers.image.created="${CREATEDTIME}"
 
 
