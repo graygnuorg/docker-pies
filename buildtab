@@ -16,6 +16,20 @@ XENV_TAG=HEAD
 os debian=12-slim
 os alpine=3.17.2
 
+build=2.24
+PIES_TAG=93b310c5b3f9cbea63ccef294bd66be65f711ab8
+XENV_TAG=4a5300996925ae35347a87d9e96ebd192070e874
+SYSLOGRELAY_TAG=v2.3
+os debian=12-slim
+os alpine=3.17.2
+
+build=2.23
+PIES_TAG=93b310c5b3f9cbea63ccef294bd66be65f711ab8
+XENV_TAG=v4.3
+SYSLOGRELAY_TAG=v2.3
+os debian=12-slim
+os alpine=3.17.2
+
 build=2.22
 PIES_TAG=93b310c5b3f9cbea63ccef294bd66be65f711ab8
 XENV_TAG=v4.2
