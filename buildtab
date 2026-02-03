@@ -16,6 +16,34 @@ XENV_TAG=HEAD
 os debian=12-slim
 os alpine=3.17.2
 
+build=2.28
+PIES_TAG=c236309bf914cbb097dfd4dc8363eebdcec8146a
+XENV_TAG=e03436e23cb18a4d053e06a2731a44d0be2ae854
+SYSLOGRELAY_TAG=v2.3
+os debian=12-slim
+os alpine=3.17.2
+
+build=2.27
+PIES_TAG=f0d2d60b6f8f0a3d1ef512977ecc03724ae1f6b2
+XENV_TAG=e03436e23cb18a4d053e06a2731a44d0be2ae854
+SYSLOGRELAY_TAG=v2.3
+os debian=12-slim
+os alpine=3.17.2
+
+build=2.26
+PIES_TAG=870ddf88cee39393b3bfd207fbb4cab1584bc94a
+XENV_TAG=e03436e23cb18a4d053e06a2731a44d0be2ae854
+SYSLOGRELAY_TAG=v2.3
+os debian=12-slim
+os alpine=3.17.2
+
+build=2.25
+PIES_TAG=9e642cf76c8a88087f66edb34fed06c566b00424
+XENV_TAG=e03436e23cb18a4d053e06a2731a44d0be2ae854
+SYSLOGRELAY_TAG=v2.3
+os debian=12-slim
+os alpine=3.17.2
+
 build=2.24
 PIES_TAG=93b310c5b3f9cbea63ccef294bd66be65f711ab8
 XENV_TAG=4a5300996925ae35347a87d9e96ebd192070e874
